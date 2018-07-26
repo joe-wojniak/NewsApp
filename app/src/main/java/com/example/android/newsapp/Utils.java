@@ -32,6 +32,7 @@ public class Utils {
         String jsonResponse = null;
         try {
             jsonResponse = makeHttpRequest(url);
+            Log.d(LOG_TAG,"jsonResponse " +jsonResponse);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error closing input stream", e);
         }
@@ -145,7 +146,7 @@ public class Utils {
                 return new News(title, section, author, date, articleUrl);
             }
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Problem parsing the earthquake JSON results", e);
+            Log.e(LOG_TAG, "Problem parsing the JSON results", e);
         }
         return null;
     }
