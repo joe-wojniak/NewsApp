@@ -78,13 +78,14 @@ public class Utils {
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
             if (urlConnection.getResponseCode() == 200) {
+                Log.i(LOG_TAG, "urlConnection ResponseCode "+urlConnection.getResponseCode());
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -126,20 +127,19 @@ public class Utils {
 
         try {
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
-            JSONArray resultsArray = baseJsonResponse.getJSONArray("response");
+            JSONArray resultsArray = baseJsonResponse.getJSONArray("results");
 
             // If there are results in the results array
             if (resultsArray.length() > 0) {
                 // Extract out the first result (which is an article)
                 JSONObject firstResult = resultsArray.getJSONObject(0);
-                JSONObject properties = firstResult.getJSONObject("results");
 
                 // Extract out the title, section, author, date, and article url
-                String title = properties.getString("webTitle");
-                String section = properties.getString("sectionName");
-                String author = properties.getString("author");
-                String date = properties.getString("webPublicationDate");
-                String articleUrl = properties.getString("webUrl");
+                String title = firstResult.getString("webTitle");
+                String section = firstResult.getString("sectionName");
+                String author = firstResult.optString("author");
+                String date = firstResult.getString("webPublicationDate");
+                String articleUrl = firstResult.getString("webUrl");
 
                 // Create a new {@link News} object
                 return new News(title, section, author, date, articleUrl);

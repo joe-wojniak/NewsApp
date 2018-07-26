@@ -6,19 +6,19 @@ package com.example.android.newsapp;
 public class News {
 
     /** Title of the article */
-    public final String title;
+    public final String mTitle;
 
     /** Section that the article is from */
-    public final String section;
+    public final String mSection;
 
     /** Author's name */
-    public final String author;
+    public final String mAuthor;
 
     /** Date of article */
-    public final String date;
+    public final String mDate;
 
     /** Url of Article */
-    public final String articleUrl;
+    public final String mArticleUrl;
 
     /**
      * Constructs a new {@link News}.
@@ -30,10 +30,46 @@ public class News {
      * @param newsUrl is the url of the article
      */
     public News(String newsTitle, String newsSection, String newsAuthor, String newsDate, String newsUrl) {
-        title = newsTitle;
-        section = newsSection;
-        author = newsAuthor;
-        date = newsDate;
-        articleUrl = newsUrl;
+        mTitle = newsTitle;
+        mSection = newsSection;
+        mAuthor = newsAuthor;
+        mDate = newsDate;
+        mArticleUrl = newsUrl;
     }
+
+    /**
+     * Returns the title of the news article.
+     */
+    public String getTitle() {
+        return mTitle;
+    }
+
+    /**
+     * Returns the section that the news article is from.
+     */
+    public String getSection() {
+        return mSection;
+    }
+
+    /**
+     * Returns the Author of the news article.
+     */
+    public String getAuthor() {
+        return mAuthor;
+    }
+
+    /**
+     * Returns the date of the news article.
+     */
+    public String getDate() {
+        return mDate;
+    }
+
+    /**
+     * Returns the url of the news article.
+     */
+    public String getUrl() {
+        return mArticleUrl;
+    }
+
 }
