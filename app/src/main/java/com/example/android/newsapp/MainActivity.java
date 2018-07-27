@@ -1,4 +1,21 @@
-
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Sections of code functionality copied & modified from ud843 QuakeReport
+ * to implement abnd_proj6 NewsApp
+ */
 
 package com.example.android.newsapp;
 
@@ -61,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         newsListView.setAdapter(mAdapter);
 
         // Set an item click listener on the ListView, which sends an intent to a web browser
-        // to open a website with more information about the selected earthquake.
+        // to open a website with more information about the selected article.
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -101,23 +118,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mEmptyStateTextView.setText(R.string.no_internet_connection);
         }
 
-        @Override
-        public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
-            return new NewsLoader(this, NEWS_REQUEST_URL);
-        }
+    }
 
-        @Override
-        public void onLoadFinished(Loader<List<News>> loader, List<News> newsList) {
-            // If there is a valid list of {@link News}s, then add them to the adapter's
-            // data set. This will trigger the ListView to update.
-            if (newsList != null && !newsList.isEmpty()) {
-                mAdapter.addAll(newsList);
-        }
+    @Override
+    public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
+        return new NewsLoader(this, NEWS_REQUEST_URL);
+    }
 
-        @Override
-        public void onLoaderReset(Loader<List<News>> loader) {
-                // Loader reset, so we can clear out our existing data.
-                mAdapter.clear();
+    @Override
+    public void onLoadFinished(Loader<List<News>> loader, List<News> newsList) {
+        // If there is a valid list of {@link News}s, then add them to the adapter's
+        // data set. This will trigger the ListView to update.
+        if (newsList != null && !newsList.isEmpty()) {
+            mAdapter.addAll(newsList);
         }
     }
+
+    @Override
+    public void onLoaderReset(Loader<List<News>> loader) {
+        // Loader reset, so we can clear out our existing data.
+        mAdapter.clear();
+    }
+
 }

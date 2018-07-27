@@ -1,3 +1,7 @@
+/* Sections of code functionality copied & modified from ud843 QuakeReport
+ * to implement abnd_proj6 NewsApp
+ */
+
 package com.example.android.newsapp;
 
 import android.content.Context;
@@ -17,7 +21,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
      * Constructs a new {@link NewsAdapter}.
      *
      * @param context  of the app
-     * @param newsList is the list of earthquakes, which is the data source of the adapter
+     * @param newsList is the list of articles, which is the data source of the adapter
      */
     public NewsAdapter(Context context, List<News> newsList) {
         super(context, 0, newsList);

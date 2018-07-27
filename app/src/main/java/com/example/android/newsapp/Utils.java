@@ -1,3 +1,7 @@
+/* Sections of code functionality copied & modified from ud843 QuakeReport
+ * to implement abnd_proj6 NewsApp
+ */
+
 package com.example.android.newsapp;
 
 import android.text.TextUtils;
