@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,18 +59,18 @@ public class MainActivity extends AppCompatActivity {
      * {@link AsyncTask} to perform the network request on a background thread, and then
      * update the UI with the first article in the response.
      */
-    private class NewsAsyncTask extends AsyncTask<URL, Void, News> {
+    private class NewsAsyncTask extends AsyncTask<URL, Void, List<News>> {
 
         @Override
-        protected News doInBackground(URL... urls) {
+        protected List<News> doInBackground(URL... urls) {
             /*// Don't perform the request if there are no URLs, or the first URL is null.
             if (urls.length < 1 || urls[0] == null) {
                 return null;
             }*/
 
             // Perform the HTTP request for data and process the response.
-            News news = Utils.fetchNewsData(NEWS_REQUEST_URL);
-            return news;
+            List<News> newsList = (List<News>) Utils.fetchNewsData(NEWS_REQUEST_URL);
+            return newsList;
         }
 
         /**
@@ -77,16 +78,16 @@ public class MainActivity extends AppCompatActivity {
          * {@link NewsAsyncTask}).
          */
         @Override
-        protected void onPostExecute(News news) {
-            if (news == null) {
-                Log.d(LOG_TAG, "News: "+news);
+        protected void onPostExecute(List<News> newsList) {
+            if (newsList == null) {
+                Log.d(LOG_TAG, "News: "+newsList);
                 return;
             }
 
             // If there is a valid list of {@link News}s, then add them to the adapter's
             // data set. This will trigger the ListView to update.
-            if (news != null) {
-                mAdapter.addAll(news);
+            if (newsList != null) {
+                mAdapter.addAll(newsList);
             }
         }
     }

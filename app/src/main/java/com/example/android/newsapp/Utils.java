@@ -15,16 +15,20 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     public static final String LOG_TAG = Utils.class.getSimpleName();
 
     /**
      * Query the Guardian api and return an {@link News} object to represent an article.
      */
-    public static News fetchNewsData(String requestUrl) {
+    public static List<News> fetchNewsData(String requestUrl) {
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -32,17 +36,18 @@ public class Utils {
         String jsonResponse = null;
         try {
             jsonResponse = makeHttpRequest(url);
-            Log.d(LOG_TAG,"jsonResponse " +jsonResponse);
+            Log.d(LOG_TAG, "jsonResponse " + jsonResponse);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error closing input stream", e);
         }
 
-        // Extract relevant fields from the JSON response and create an {@link Event} object
-        News news = extractFeatureFromJson(jsonResponse);
+        // Extract relevant fields from the JSON response and create an {@link News} object
+        List<News> news = extractFeatureFromJson(jsonResponse);
 
         // Return the {@link News}
         return news;
     }
+
     /**
      * Returns new URL object from the given string URL.
      */
@@ -79,7 +84,7 @@ public class Utils {
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
             if (urlConnection.getResponseCode() == 200) {
-                Log.i(LOG_TAG, "urlConnection ResponseCode "+urlConnection.getResponseCode());
+                Log.i(LOG_TAG, "urlConnection ResponseCode " + urlConnection.getResponseCode());
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
@@ -120,34 +125,41 @@ public class Utils {
      * Return an {@link News} object by parsing out information
      * about the first article from the input newsJSON string.
      */
-    private static News extractFeatureFromJson(String newsJSON) {
+    private static List<News> extractFeatureFromJson(String newsJSON) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(newsJSON)) {
             return null;
         }
 
+        // Create an empty ArrayList that we can start adding news to
+        List<News> newsList = new ArrayList<>();
+
         try {
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
-            JSONArray resultsArray = baseJsonResponse.getJSONArray("results");
-
+            JSONObject response = baseJsonResponse.getJSONObject("response");
+            JSONArray resultsArray = response.getJSONArray("results");
+            Log.d(LOG_TAG, "resultsArray.length " + resultsArray.length());
             // If there are results in the results array
             if (resultsArray.length() > 0) {
-                // Extract out the first result (which is an article)
-                JSONObject firstResult = resultsArray.getJSONObject(0);
-
-                // Extract out the title, section, author, date, and article url
-                String title = firstResult.getString("webTitle");
-                String section = firstResult.getString("sectionName");
-                String author = firstResult.optString("author");
-                String date = firstResult.getString("webPublicationDate");
-                String articleUrl = firstResult.getString("webUrl");
-
-                // Create a new {@link News} object
-                return new News(title, section, author, date, articleUrl);
+                // For each article in the resultsArray, create an {@link News} object
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    // Extract out the first result (which is an article)
+                    JSONObject firstResult = resultsArray.getJSONObject(i);
+                    // Extract out the title, section, author, date, and article url
+                    String title = firstResult.getString("webTitle");
+                    String section = firstResult.getString("sectionName");
+                    String author = firstResult.optString("author");
+                    String date = firstResult.getString("webPublicationDate");
+                    String articleUrl = firstResult.getString("webUrl");
+                    // Create a new {@link News} object
+                    News news = new News(title, section, author, date, articleUrl);
+                    // Add the new {@link News} to the list of articles.
+                    newsList.add(news);
+                }
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing the JSON results", e);
         }
-        return null;
+        return newsList;
     }
 }
