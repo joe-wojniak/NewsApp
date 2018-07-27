@@ -50,23 +50,38 @@ public class NewsAdapter extends ArrayAdapter<News> {
         String section = currentNews.getSection();
         sectionView.setText(section);
 
-        // Find the TextView with view ID author
-        TextView authorView = (TextView) listItemView.findViewById(R.id.author);
+        // Display Author if not empty
+        if (currentNews.getAuthor() != null && !currentNews.getAuthor().isEmpty()) {
+            // Find the TextView with view ID author
+            TextView authorView = (TextView) listItemView.findViewById(R.id.author);
+            // make the TextView visible
+            authorView.setVisibility(View.VISIBLE);
+            // Display the author in that TextView
+            String author = currentNews.getAuthor();
+            authorView.setText(author);
+        }
 
-        // Display the author in that TextView
-        String author = currentNews.getAuthor();
-        authorView.setText(author);
 
         // Find the TextView with view ID date
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
 
-        // Display the date in that TextView
-        String date = currentNews.getDate();
-        dateView.setText(date);
+        /*// Format date
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH);
+        Date myDate=null;
+        try {
+            myDate = df.parse(currentNews.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(myDate);
+        */
+
+        // Set the TextView with current date
+        dateView.setText(currentNews.getDate());
 
         // Find the TextView with view ID newsUrl
         TextView newsUrlView = (TextView) listItemView.findViewById(R.id.newsUrl);
-
         // Display the newsUrl in that TextView
         String newsUrl = currentNews.getUrl();
         newsUrlView.setText(newsUrl);
