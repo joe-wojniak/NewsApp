@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -8,43 +8,39 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="title"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/textSize"
-        android:text="title">
-    </TextView>
+        android:textSize="@dimen/textSize"></TextView>
 
     <TextView
         android:id="@+id/section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textSize"
-        android:text="section">
-    </TextView>
+        android:text="section"
+        android:textSize="@dimen/textSize"></TextView>
 
     <TextView
         android:id="@+id/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:text="author"
         android:textSize="@dimen/textSize"
-        android:text="author">
-    </TextView>
+        android:visibility="gone"></TextView>
 
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textSize"
-        android:text="date">
-    </TextView>
+        android:text="date"
+        android:textSize="@dimen/textSize"></TextView>
 
     <TextView
         android:id="@+id/newsUrl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="newsUrl"
         android:textSize="@dimen/textSize"
-        android:text="newsUrl">
-    </TextView>
+        android:visibility="gone"></TextView>
 
     <View
         android:layout_width="fill_parent"

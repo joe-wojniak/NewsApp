@@ -2,25 +2,35 @@
 
 package com.example.android.newsapp;
 
-import android.os.AsyncTask;
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     //URL for news data from the Guardian api
     private static final String NEWS_REQUEST_URL =
             "https://content.guardianapis.com/search?q=elon%20musk&api-key=bf3dcc23-6ca4-4239-a7b2-5d3839df748a";
+    //NewsLoader ID
+    private static final int NEWS_LOADER_ID = 1;
 
     /**
      * Adapter for the list of articles
@@ -50,45 +60,64 @@ public class MainActivity extends AppCompatActivity {
         // so the list can be populated in the user interface
         newsListView.setAdapter(mAdapter);
 
-        // Kick off an {@link AsyncTask} to perform the network request
-        NewsAsyncTask task = new NewsAsyncTask();
-        task.execute();
-    }
+        // Set an item click listener on the ListView, which sends an intent to a web browser
+        // to open a website with more information about the selected earthquake.
+        newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Find the current article that was clicked on
+                News currentNews = mAdapter.getItem(position);
 
-    /**
-     * {@link AsyncTask} to perform the network request on a background thread, and then
-     * update the UI with the first article in the response.
-     */
-    private class NewsAsyncTask extends AsyncTask<URL, Void, List<News>> {
+                // Convert the String URL into a URI object (to pass into the Intent constructor)
+                Uri newsUri = Uri.parse(currentNews.getUrl());
 
-        @Override
-        protected List<News> doInBackground(URL... urls) {
-            /*// Don't perform the request if there are no URLs, or the first URL is null.
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }*/
+                // Create a new intent to view the news URI
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
 
-            // Perform the HTTP request for data and process the response.
-            List<News> newsList = (List<News>) Utils.fetchNewsData(NEWS_REQUEST_URL);
-            return newsList;
+                // Send the intent to launch a new activity
+                startActivity(websiteIntent);
+            }
+        });
+
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get details on the currently active default data network
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        // If there is a network connection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Get a reference to the LoaderManager, in order to interact with loaders.
+            LoaderManager loaderManager = getLoaderManager();
+
+            // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+            // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+            // because this activity implements the LoaderCallbacks interface).
+            loaderManager.initLoader(NEWS_LOADER_ID, null, this);
+        } else {
+            // Otherwise, display error
+            // Update empty state with no connection error message
+            mEmptyStateTextView.setText(R.string.no_internet_connection);
         }
 
-        /**
-         * Update the screen with the news article (which was the result of the
-         * {@link NewsAsyncTask}).
-         */
         @Override
-        protected void onPostExecute(List<News> newsList) {
-            if (newsList == null) {
-                Log.d(LOG_TAG, "News: "+newsList);
-                return;
-            }
+        public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
+            return new NewsLoader(this, NEWS_REQUEST_URL);
+        }
 
+        @Override
+        public void onLoadFinished(Loader<List<News>> loader, List<News> newsList) {
             // If there is a valid list of {@link News}s, then add them to the adapter's
             // data set. This will trigger the ListView to update.
-            if (newsList != null) {
+            if (newsList != null && !newsList.isEmpty()) {
                 mAdapter.addAll(newsList);
-            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<News>> loader) {
+                // Loader reset, so we can clear out our existing data.
+                mAdapter.clear();
         }
     }
 }

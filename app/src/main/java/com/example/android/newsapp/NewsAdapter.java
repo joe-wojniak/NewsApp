@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<News> {
@@ -61,32 +64,31 @@ public class NewsAdapter extends ArrayAdapter<News> {
             authorView.setText(author);
         }
 
-
         // Find the TextView with view ID date
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
-
-        /*// Format date
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH);
-        Date myDate=null;
-        try {
-            myDate = df.parse(currentNews.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(myDate);
-        */
-
+        // Format the date string (i.e. "Mar 3, 1984")
+        String dateToFormat = currentNews.getDate().substring(0,10);
+        String formattedDate = formatDate(dateToFormat);
         // Set the TextView with current date
-        dateView.setText(currentNews.getDate());
-
-        // Find the TextView with view ID newsUrl
-        TextView newsUrlView = (TextView) listItemView.findViewById(R.id.newsUrl);
-        // Display the newsUrl in that TextView
-        String newsUrl = currentNews.getUrl();
-        newsUrlView.setText(newsUrl);
+        dateView.setText(formattedDate);
 
         // Return the list item view that is now showing the appropriate data
         return listItemView;
     }
+
+    /**
+     * Return the formatted date string (i.e. "Mar 3, 1984") from a String.
+     */
+    private String formatDate(String dateFormatting) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        Date convertedDate = new Date();
+        try{
+            convertedDate = dateFormat.parse(dateFormatting);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String strDate = dateFormat.format(convertedDate);
+        return strDate;
+    }
+
 }
