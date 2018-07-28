@@ -1,5 +1,5 @@
 /* Sections of code functionality copied & modified from ud843 QuakeReport
- * to implement abnd_proj6 NewsApp
+ * to implement abnd_proj6 NewsApp Stage 1
  */
 
 package com.example.android.newsapp;
@@ -10,19 +10,19 @@ package com.example.android.newsapp;
 public class News {
 
     /** Title of the article */
-    public final String mTitle;
+    private final String mTitle;
 
     /** Section that the article is from */
-    public final String mSection;
+    private final String mSection;
 
     /** Author's name */
-    public final String mAuthor;
+    private final String mAuthor;
 
     /** Date of article */
-    public final String mDate;
+    private final String mDate;
 
     /** Url of Article */
-    public final String mArticleUrl;
+    private final String mArticleUrl;
 
     /**
      * Constructs a new {@link News}.

@@ -2,6 +2,9 @@
     <string name="app_name">NewsApp</string>
 
     <!-- Error message when there is no internet connectivity [CHAR LIMIT=NONE] -->
-    <string name="no_internet_connection">No internet connection.</string>
+    <string name="no_internet_connection">No internet connection found.\nPlease try again later.</string>
+
+    <!-- Error message when there is no no news returned [CHAR LIMIT=NONE] -->
+    <string name="no_news_returned">No news found.\nThere may be an issue with the news service.\nPlease try again later.</string>
 
 </resources>

@@ -1,5 +1,5 @@
 /* Sections of code functionality copied & modified from ud843 QuakeReport
- * to implement abnd_proj6 NewsApp
+ * to implement abnd_proj6 NewsApp Stage 1
  */
 
 package com.example.android.newsapp;
@@ -65,13 +65,18 @@ public class NewsAdapter extends ArrayAdapter<News> {
             authorView.setVisibility(View.VISIBLE);
             // Display the author in that TextView
             String author = currentNews.getAuthor();
-            authorView.setText(author);
+            authorView.setText("Author: " + author);
+        } else {
+            // Find the TextView with view ID author
+            TextView authorView = (TextView) listItemView.findViewById(R.id.author);
+            // if Author is null or empty, make the TextView gone (doesn't show or take up space)
+            authorView.setVisibility(View.GONE);
         }
 
         // Find the TextView with view ID date
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         // Format the date string (i.e. "Mar 3, 1984")
-        String dateToFormat = currentNews.getDate().substring(0,10);
+        String dateToFormat = currentNews.getDate().substring(0, 10);
         String formattedDate = formatDate(dateToFormat);
         // Set the TextView with current date
         dateView.setText(formattedDate);
@@ -86,7 +91,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
     private String formatDate(String dateFormatting) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         Date convertedDate = new Date();
-        try{
+        try {
             convertedDate = dateFormat.parse(dateFormatting);
         } catch (ParseException e) {
             e.printStackTrace();

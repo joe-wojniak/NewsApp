@@ -1,5 +1,5 @@
 /* Sections of code functionality copied & modified from ud843 QuakeReport
- * to implement abnd_proj6 NewsApp
+ * to implement abnd_proj6 NewsApp Stage 1
  */
 
 package com.example.android.newsapp;
@@ -27,7 +27,15 @@ public class Utils {
     /**
      * Tag for the log messages
      */
-    public static final String LOG_TAG = Utils.class.getSimpleName();
+    private static final String LOG_TAG = Utils.class.getSimpleName();
+
+    /**
+     * Create a private constructor because no one should ever create a {@link Utils} object.
+     * This class is only meant to hold static variables and methods, which can be accessed
+     * directly from the class name Utils (and an object instance of Utils is not needed).
+     */
+    private Utils() {
+    }
 
     /**
      * Query the Guardian api and return an {@link News} object to represent an article.
@@ -142,19 +150,31 @@ public class Utils {
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
             JSONObject response = baseJsonResponse.getJSONObject("response");
             JSONArray resultsArray = response.getJSONArray("results");
+
+            // Log resultsArray length to check parse
             Log.d(LOG_TAG, "resultsArray.length " + resultsArray.length());
+
             // If there are results in the results array
             if (resultsArray.length() > 0) {
                 // For each article in the resultsArray, create an {@link News} object
                 for (int i = 0; i < resultsArray.length(); i++) {
                     // Extract out the first result (which is an article)
                     JSONObject firstResult = resultsArray.getJSONObject(i);
-                    // Extract out the title, section, author, date, and article url
+                    // Extract out the title, section, date, and article url
                     String title = firstResult.getString("webTitle");
                     String section = firstResult.getString("sectionName");
-                    String author = firstResult.optString("author");
                     String date = firstResult.getString("webPublicationDate");
                     String articleUrl = firstResult.getString("webUrl");
+                    JSONArray tagsArray = firstResult.getJSONArray("tags");
+                    String author = null; // author is in nested JSONArray tags
+                    if (tagsArray.length()>0){
+                        // for each tagsArray in the resultsArray, extract the Author
+                        for (int j = 0; j < tagsArray.length(); j++) {
+                            JSONObject contributor = tagsArray.getJSONObject(j);
+                            // Extract out the author's name
+                            author = contributor.optString("webTitle");
+                        }
+                    }
                     // Create a new {@link News} object
                     News news = new News(title, section, author, date, articleUrl);
                     // Add the new {@link News} to the list of articles.

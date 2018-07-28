@@ -10,29 +10,28 @@
         android:layout_height="wrap_content"
         android:text="title"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/textSize"></TextView>
+        android:textSize="@dimen/textSize" />
 
     <TextView
         android:id="@+id/section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="section"
-        android:textSize="@dimen/textSize"></TextView>
+        android:textSize="@dimen/textSize" />
 
     <TextView
         android:id="@+id/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="author"
-        android:textSize="@dimen/textSize"
-        android:visibility="gone"></TextView>
+        android:textSize="@dimen/textSize" />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="date"
-        android:textSize="@dimen/textSize"></TextView>
+        android:textSize="@dimen/textSize" />
 
     <TextView
         android:id="@+id/newsUrl"
@@ -40,7 +39,7 @@
         android:layout_height="wrap_content"
         android:text="newsUrl"
         android:textSize="@dimen/textSize"
-        android:visibility="gone"></TextView>
+        android:visibility="gone" />
 
     <View
         android:layout_width="fill_parent"

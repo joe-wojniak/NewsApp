@@ -1,5 +1,5 @@
 /* Sections of code functionality copied & modified from ud843 QuakeReport
- * to implement abnd_proj6 NewsApp
+ * to implement abnd_proj6 NewsApp Stage 1
  */
 
 package com.example.android.newsapp;

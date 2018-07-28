@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  * Sections of code functionality copied & modified from ud843 QuakeReport
- * to implement abnd_proj6 NewsApp
+ * to implement abnd_proj6 NewsApp Stage 1
  */
 
 package com.example.android.newsapp;
@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * Tag for the log messages
      */
-    public static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     //URL for news data from the Guardian api
     private static final String NEWS_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=elon%20musk&api-key=bf3dcc23-6ca4-4239-a7b2-5d3839df748a";
+            "https://content.guardianapis.com/search?q=elon%20musk||tesla&show-tags=contributor&api-key=bf3dcc23-6ca4-4239-a7b2-5d3839df748a";
     //NewsLoader ID
     private static final int NEWS_LOADER_ID = 1;
 
@@ -122,7 +122,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
-        return new NewsLoader(this, NEWS_REQUEST_URL);
+
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get details on the currently active default data network
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return new NewsLoader(this, NEWS_REQUEST_URL);
+        } else {
+            // Otherwise, display error
+            // Update empty state with no connection error message
+            mEmptyStateTextView.setText(R.string.no_internet_connection);
+            return null;
+        }
     }
 
     @Override
@@ -131,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // data set. This will trigger the ListView to update.
         if (newsList != null && !newsList.isEmpty()) {
             mAdapter.addAll(newsList);
+        } else {
+            // no news returned, display error message
+            mEmptyStateTextView.setText(R.string.no_news_returned);
         }
     }
 
@@ -139,5 +157,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
     }
-
 }
